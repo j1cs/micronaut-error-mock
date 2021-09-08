@@ -1,0 +1,6 @@
+micronaut:
+  server:
+    port: -1
+  http:
+    client:
+      read-timeout: 10h
