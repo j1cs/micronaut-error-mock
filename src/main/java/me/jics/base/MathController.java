@@ -2,7 +2,9 @@ package me.jics.base;
 
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller("/math")
 public class MathController {
 
@@ -12,13 +14,9 @@ public class MathController {
         this.mathService = mathService;
     }
 
-    @Get(uri = "/compute/{number}", processes = MediaType.TEXT_PLAIN)
-    String compute(Integer number) {
-        return String.valueOf(mathService.compute(number));
-    }
-
-    @Get(uri = "/compute", processes = MediaType.TEXT_PLAIN)
-    String computePost(@Body Request request) {
-        return String.valueOf(mathService.compute(request.getNum()));
+    @Post(uri = "/compute")
+    Response computePost(@Body Request request) {
+        log.info("computePost request={}", request);
+        return mathService.compute(request);
     }
 }

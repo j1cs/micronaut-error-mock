@@ -1,21 +1,49 @@
 package me.jics.base;
-import io.micronaut.http.HttpStatus;
+import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.client.HttpClient;
+import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.junit.jupiter.api.Test;
 import io.micronaut.http.client.annotation.*;
 import jakarta.inject.Inject;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @MicronautTest
-public class MathControllerTest {
+class MathControllerTest {
+
+    @Inject
+    MathService mathService;
 
     @Inject
     @Client("/")
     HttpClient client;
 
+
     @Test
-    public void testIndex() throws Exception {
-        assertEquals(HttpStatus.OK, client.toBlocking().exchange("/math").status());
+    void testComputeNumToSquarePost() {
+        Request request = Request.builder().num(2).build();
+        when( mathService.compute(request) )
+                .then(invocation -> Response.builder().build());
+
+
+        final HttpResponse<Response> response = client.toBlocking().exchange(HttpRequest.POST("/math/compute", request), Response.class);
+        assertNotNull(response.body());
+        Response result = response.body();
+        assertEquals(
+                4,
+                result.getMsg()
+        );
+        verify(mathService).compute(request);
     }
+
+    @MockBean(MathServiceImpl.class)
+    MathService service() {
+        return mock(MathService.class);
+    }
+
 }
