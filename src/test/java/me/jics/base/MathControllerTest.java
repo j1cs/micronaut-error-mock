@@ -28,7 +28,7 @@ class MathControllerTest {
     void testComputeNumToSquarePost() {
         Request request = Request.builder().num(2).build();
         when( mathService.compute(request) )
-                .then(invocation -> Response.builder().build());
+                .then(invocation -> Response.builder().msg(2*4).build());
 
 
         final HttpResponse<Response> response = client.toBlocking().exchange(HttpRequest.POST("/math/compute", request), Response.class);
