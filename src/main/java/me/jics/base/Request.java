@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @ToString
+@EqualsAndHashCode
 @Introspected
 public class Request {
     private Integer num;

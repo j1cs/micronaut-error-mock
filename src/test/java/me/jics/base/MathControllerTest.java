@@ -28,14 +28,14 @@ class MathControllerTest {
     void testComputeNumToSquarePost() {
         Request request = Request.builder().num(2).build();
         when( mathService.compute(request) )
-                .then(invocation -> Response.builder().msg(2*4).build());
+                .then(invocation -> Response.builder().msg(2*2).build());
 
 
         final HttpResponse<Response> response = client.toBlocking().exchange(HttpRequest.POST("/math/compute", request), Response.class);
         assertNotNull(response.body());
         Response result = response.body();
         assertEquals(
-                4,
+                8,
                 result.getMsg()
         );
         verify(mathService).compute(request);
@@ -43,7 +43,7 @@ class MathControllerTest {
 
     @MockBean(MathServiceImpl.class)
     MathService service() {
-        return mock(MathService.class);
+        return mock(MathService.class, withSettings().verboseLogging());
     }
 
 }
